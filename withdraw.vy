@@ -1,9 +1,6 @@
-lastDeposit: public(uint256)
+# @version ^0.3.0
+
 depositContractAddress: public(address)
-
-
-event FundsAdded:
-    value: uint256
 
 
 @external
@@ -22,7 +19,4 @@ def set_deposit_contract_address(depositContractAddress: address):
 @payable
 def __default__():
     assert msg.sender == self.depositContractAddress, 'You cannot send funds to this contract.'
-
-    # Commenting out the following lines will cause the test to pass.
-    self.lastDeposit = msg.value
-    log FundsAdded(msg.value)
+    # We cannot have any log messages or anything that uses gas here or we will get a reversion.

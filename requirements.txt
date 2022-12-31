@@ -1,0 +1,5 @@
+eth-tester
+eth2spec
+py-evm
+web3>=5
+vyper
