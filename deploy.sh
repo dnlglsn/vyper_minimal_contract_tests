@@ -16,3 +16,9 @@ set -euo pipefail
 --chain ganache --writeABI withdraw.json --args \
 0xAD2fB447D49Bbb739a314cb27166C3ABdc61301f \
 )
+
+# Deploy the ecrecover testing contract
+# Args: none
+(python deploy.py ecrecover.vy 0x1687BD6E217cD3bD0C1F10bBd6C240bDF31FE4A2 --adminPrivateKey 0x0eadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef \
+--chain ganache --writeABI ecrecover.json \
+)

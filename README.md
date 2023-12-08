@@ -8,7 +8,7 @@ Here are example contracts, tests, and Ganache integration tests for two simple 
 pip install -r requirements.txt
 ```
 
-## Unit Tests
+## Unit Tests (CURRENTLY BROKEN)
 
 We have written unit tests using `eth_tester`. It can test the basic functions contained within a
 Vyper contract.
@@ -36,8 +36,9 @@ a real chain than `eth_tester`.
 We need to start Ganache first before we do anything.
 
 ```bash
-$ ./start_ganache.sh
-Ganache CLI v6.12.2 (ganache-core: 2.13.2)
+$ ./start_ganache.sh 
+ganache v7.9.1 (@ganache/cli: 0.10.1, @ganache/core: 0.10.1)
+Starting RPC server
 
 Available Accounts
 ==================
@@ -57,19 +58,25 @@ Private Keys
 (4) 0x4eadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef
 (5) 0x5eadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef
 
-Gas Price
+Default Gas Price
 ==================
-20000000000
+2000000000
 
-Gas Limit
+BlockGas Limit
 ==================
-6721975
+30000000
 
 Call Gas Limit
 ==================
-9007199254740991
+50000000
 
-Listening on 127.0.0.1:8545
+Chain
+==================
+Hardfork: shanghai
+Id:       1337
+
+RPC Listening on 127.0.0.1:8545
+
 ```
 
 ### Deploy the Contracts
@@ -86,12 +93,16 @@ Contract ABI-encoded constructor args: 0000000000000000000000007acaa92b7be0f6e6e
 Contract address: 0x7aCaA92b7bE0F6e6eD61D58e642cDA65B6FEacBE
 Contract ABI written to: withdraw.json
 Contract ABI-encoded constructor args: 000000000000000000000000ad2fb447d49bbb739a314cb27166c3abdc61301f
+
+Contract address: 0x95Cd966557C23504f824893bCc68e0e186365Af0
+Contract ABI written to: ecrecover.json
+Contract ABI-encoded constructor args: 
 ```
 
 ### Test
 
 ```bash
-$ python ganache_tests.py
+$ python deposit_and_withdraw_test.py
 
 depositContract funds 0
 withdrawContract funds 0
@@ -102,4 +113,10 @@ withdrawContract funds 0
 
 depositContract funds 0
 withdrawContract funds 10000000000000000000
+```
+
+```bash
+$ python ecrecover_test.py
+expected public key: 0x7917bDC011955E1B45195553D2AAE6AB17422298
+ecrecover result:    0x7917bDC011955E1B45195553D2AAE6AB17422298
 ```

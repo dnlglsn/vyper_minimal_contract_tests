@@ -28,6 +28,11 @@ def deploy(location, endpoint, constructorArgs, publicKey, privateKey, chain):
     web3 = Web3(HTTPProvider(endpoint))
     web3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
+    chainId = {
+        'ganache': 1337,
+        'goerli': 5,
+    }[chain]
+
     # Compile the a contract
     compiled = compile_contract(location)
 
@@ -45,13 +50,15 @@ def deploy(location, endpoint, constructorArgs, publicKey, privateKey, chain):
     constructArgs = {
         'from': publicKey,
         'nonce': web3.eth.get_transaction_count(publicKey),
+        'gasPrice': web3.eth.gas_price,
+        'chainId': chainId
     }
     # For Ganache local deployment we need more stuff
     if chain == 'ganache':
         constructArgs['gas'] = 5000000
         constructArgs['gasPrice'] = 100000000000
 
-    txConstruct = contract.constructor(*convertedArgs).buildTransaction(constructArgs)
+    txConstruct = contract.constructor(*convertedArgs).build_transaction(constructArgs)
 
     # We need the ABI encoded constructor args for source code verification
     abiEncodedArgs = txConstruct['data'].split(compiled['bytecode'])[1]
@@ -78,7 +85,7 @@ if __name__ == '__main__':
     parser.add_argument('--adminPrivateKey', help='We need the private key to sign the transaction which deploys the contract.')
     parser.add_argument('-a','--args', nargs='*', default=[], help="The contract's constructor arguments.")
     parser.add_argument('--endpoint', default='http://127.0.0.1:8545/', help='The web3 JSON RPC endpoint used to deploy.')
-    parser.add_argument('--chain', default='ganache', choices=['ganache', 'geth'], help='The chain used.')
+    parser.add_argument('--chain', default='ganache', choices=['ganache', 'goerli'], help='The chain used.')
     parser.add_argument('--writeABI', default='', help='Optionally write out the ABI to this filename.')
     args = parser.parse_args()
 
